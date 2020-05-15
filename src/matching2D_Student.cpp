@@ -212,3 +212,26 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
         cv::waitKey(0);
     }
 }
+
+void calcRoiKeypoints(const cv::Rect roi, std::vector<cv::KeyPoint> &keypoints)
+{
+    int minX = roi.x;
+    int minY = roi.y;
+
+    int maxX = minX + roi.width;
+    int maxY = minY + roi.height;
+
+    std::vector<cv::KeyPoint> roiKeypoints;
+
+    for (cv::KeyPoint keypoint : keypoints)
+    {
+        if ((minX < keypoint.pt.x && keypoint.pt.x < maxX) && (minY < keypoint.pt.y && keypoint.pt.y < maxY))
+        {
+            roiKeypoints.push_back(keypoint);
+        }
+    }
+
+    keypoints = roiKeypoints;
+
+    cout << "Keypoints filter to given ROI" << endl;
+}

@@ -108,7 +108,7 @@ int main(int argc, const char *argv[])
         cv::Rect vehicleRect(535, 180, 180, 150);
         if (bFocusOnVehicle)
         {
-            // ...
+            calcRoiKeypoints(vehicleRect, keypoints);
         }
 
         //// EOF STUDENT ASSIGNMENT
