@@ -20,7 +20,15 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
     }
     else if (matcherType.compare("MAT_FLANN") == 0)
     {
-        // ...
+        if (descSource.type() != CV_32F || descRef.type() != CV_32F)
+        {
+            // OpenCV bug workaround : convert binary descriptors to floating point due to a bug in current OpenCV implementation
+            descSource.convertTo(descSource, CV_32F);
+            descRef.convertTo(descRef, CV_32F);
+        }
+
+        int normType = descriptorType.compare("SIFT") == 0 ? cv::NORM_HAMMING : cv::NORM_L2;
+        matcher = cv::FlannBasedMatcher::create();
     }
 
     // perform matching task
