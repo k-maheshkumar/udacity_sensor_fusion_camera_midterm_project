@@ -58,14 +58,14 @@ int main(int argc, const char *argv[])
     deque<DataFrame> dataBuffer; // list of data frames which are held in memory at the same time
     bool bVis = false;           // visualize results
 
-    std::string resultFileName = argv[6];
-    writeToFIle({" \n image index,detector type,time elapsed for detection,total # of keypoints,# keypoints on vehicle, descriptor type,time elapsed for descriptor,# of matched keypoints,time elapsed for matcher\n"}, resultFileName);
+    // std::string resultFileName = argv[6];
+    // writeToFIle({" \n image index,detector type,time elapsed for detection,total # of keypoints,# keypoints on vehicle, descriptor type,time elapsed for descriptor,# of matched keypoints,time elapsed for matcher\n"}, resultFileName);
 
     /* MAIN LOOP OVER ALL IMAGES */
 
     for (size_t imgIndex = 0; imgIndex <= imgEndIndex - imgStartIndex; imgIndex++)
     {
-        writeToFIle(std::to_string(int(imgIndex)) + ",", resultFileName);
+        // writeToFIle(std::to_string(int(imgIndex)) + ",", resultFileName);
 
         /* LOAD IMAGE INTO BUFFER */
 
@@ -99,8 +99,8 @@ int main(int argc, const char *argv[])
 
         // extract 2D keypoints from current image
         vector<cv::KeyPoint> keypoints; // create empty feature list for current image
-        // string detectorType = "ORB";
-        string detectorType = argv[1];
+        string detectorType = "ORB";
+        // string detectorType = argv[1];
         bool bVisualizeKeyPoints = false;
         double timeElapsed = 0.0;
 
@@ -120,7 +120,7 @@ int main(int argc, const char *argv[])
         {
             detKeypointsModern(keypoints, imgGray, detectorType, timeElapsed, bVisualizeKeyPoints);
         }
-        writeToFIle(detectorType + "," + std::to_string(timeElapsed) + "," + std::to_string(int(keypoints.size())) + ",", resultFileName);
+        // writeToFIle(detectorType + "," + std::to_string(timeElapsed) + "," + std::to_string(int(keypoints.size())) + ",", resultFileName);
         //// EOF STUDENT ASSIGNMENT
 
         //// STUDENT ASSIGNMENT
@@ -133,7 +133,7 @@ int main(int argc, const char *argv[])
         {
             calcRoiKeypoints(vehicleRect, keypoints);
         }
-        writeToFIle(std::to_string(keypoints.size()) + ",", resultFileName);
+        // writeToFIle(std::to_string(keypoints.size()) + ",", resultFileName);
 
         //// EOF STUDENT ASSIGNMENT
 
@@ -162,9 +162,9 @@ int main(int argc, const char *argv[])
         //// -> BRIEF, ORB, FREAK, AKAZE, SIFT
 
         cv::Mat descriptors;
-        // string descriptorType = "BRIEF"; // BRIEF, ORB, FREAK, AKAZE, SIFT
-        string descriptorType = argv[2]; // BRIEF, ORB, FREAK, AKAZE, SIFT
-        writeToFIle(descriptorType + ",", resultFileName);
+        string descriptorType = "BRIEF"; // BRIEF, ORB, FREAK, AKAZE, SIFT
+        // string descriptorType = argv[2]; // BRIEF, ORB, FREAK, AKAZE, SIFT
+        // writeToFIle(descriptorType + ",", resultFileName);
 
         descKeypoints((dataBuffer.end() - 1)->keypoints, (dataBuffer.end() - 1)->cameraImg, descriptors, descriptorType, timeElapsed);
         //// EOF STUDENT ASSIGNMENT
@@ -172,7 +172,7 @@ int main(int argc, const char *argv[])
         // push descriptors for current frame to end of data buffer
         (dataBuffer.end() - 1)->descriptors = descriptors;
 
-        writeToFIle(std::to_string(timeElapsed) + ",", resultFileName);
+        // writeToFIle(std::to_string(timeElapsed) + ",", resultFileName);
 
         cout << "#3 : EXTRACT DESCRIPTORS done" << endl;
 
@@ -181,12 +181,12 @@ int main(int argc, const char *argv[])
             /* MATCH KEYPOINT DESCRIPTORS */
 
             vector<cv::DMatch> matches;
-            // string matcherType = "MAT_FLANN";     // MAT_BF, MAT_FLANN
-            // string descriptorType = "DES_BINARY"; // DES_BINARY, DES_HOG
-            // string selectorType = "SEL_KNN";      // SEL_NN, SEL_KNN
-            string matcherType = argv[3];    // MAT_BF, MAT_FLANN
-            string descriptorType = argv[4]; // DES_BINARY, DES_HOG
-            string selectorType = argv[5];   // SEL_NN, SEL_KNN
+            string matcherType = "MAT_FLANN";     // MAT_BF, MAT_FLANN
+            string descriptorType = "DES_BINARY"; // DES_BINARY, DES_HOG
+            string selectorType = "SEL_KNN";      // SEL_NN, SEL_KNN
+            // string matcherType = argv[3];    // MAT_BF, MAT_FLANN
+            // string descriptorType = argv[4]; // DES_BINARY, DES_HOG
+            // string selectorType = argv[5];   // SEL_NN, SEL_KNN
 
             //// STUDENT ASSIGNMENT
             //// TASK MP.5 -> add FLANN matching in file matching2D.cpp
@@ -196,7 +196,7 @@ int main(int argc, const char *argv[])
                              (dataBuffer.end() - 2)->descriptors, (dataBuffer.end() - 1)->descriptors,
                              matches, descriptorType, matcherType, selectorType, timeElapsed);
 
-            writeToFIle(std::to_string(int(matches.size())) + "," + std::to_string(timeElapsed), resultFileName);
+            // writeToFIle(std::to_string(int(matches.size())) + "," + std::to_string(timeElapsed), resultFileName);
 
             //// EOF STUDENT ASSIGNMENT
 
@@ -224,10 +224,10 @@ int main(int argc, const char *argv[])
             }
             bVis = false;
         }
-        writeToFIle("\n", resultFileName);
+        // writeToFIle("\n", resultFileName);
 
     } // eof loop over all images
 
-    writeToFIle("\n", resultFileName);
+    // writeToFIle("\n", resultFileName);
     return 0;
 }
