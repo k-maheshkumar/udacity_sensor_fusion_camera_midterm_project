@@ -79,8 +79,10 @@ int main(int argc, const char *argv[])
 
         // extract 2D keypoints from current image
         vector<cv::KeyPoint> keypoints; // create empty feature list for current image
-        string detectorType = "ORB";
+        // string detectorType = "ORB";
+        string detectorType = argv[1];
         bool bVisualizeKeyPoints = false;
+        double timeElapsed = 0.0;
 
         //// STUDENT ASSIGNMENT
         //// TASK MP.2 -> add the following keypoint detectors in file matching2D.cpp and enable string-based selection based on detectorType
@@ -88,16 +90,17 @@ int main(int argc, const char *argv[])
 
         if (detectorType.compare("SHITOMASI") == 0)
         {
-            detKeypointsShiTomasi(keypoints, imgGray, bVisualizeKeyPoints);
+            detKeypointsShiTomasi(keypoints, imgGray, timeElapsed, bVisualizeKeyPoints);
         }
         if (detectorType.compare("HARRIS") == 0)
         {
-            detKeypointsHarris(keypoints, imgGray, bVisualizeKeyPoints);
+            detKeypointsHarris(keypoints, imgGray, timeElapsed, bVisualizeKeyPoints);
         }
         else
         {
-            detKeypointsModern(keypoints, imgGray, detectorType, bVisualizeKeyPoints);
+            detKeypointsModern(keypoints, imgGray, detectorType, timeElapsed, bVisualizeKeyPoints);
         }
+        writeToFIle(detectorType + "," + std::to_string(timeElapsed) + "," + std::to_string(int(keypoints.size())) + ",", resultFileName);
         //// EOF STUDENT ASSIGNMENT
 
         //// STUDENT ASSIGNMENT
@@ -139,7 +142,8 @@ int main(int argc, const char *argv[])
 
         cv::Mat descriptors;
         string descriptorType = "BRIEF"; // BRIEF, ORB, FREAK, AKAZE, SIFT
-        descKeypoints((dataBuffer.end() - 1)->keypoints, (dataBuffer.end() - 1)->cameraImg, descriptors, descriptorType);
+        // string descriptorType = "BRIEF"; // BRIEF, ORB, FREAK, AKAZE, SIFT
+        descKeypoints((dataBuffer.end() - 1)->keypoints, (dataBuffer.end() - 1)->cameraImg, descriptors, descriptorType, timeElapsed);
         //// EOF STUDENT ASSIGNMENT
 
         // push descriptors for current frame to end of data buffer
@@ -163,7 +167,7 @@ int main(int argc, const char *argv[])
 
             matchDescriptors((dataBuffer.end() - 2)->keypoints, (dataBuffer.end() - 1)->keypoints,
                              (dataBuffer.end() - 2)->descriptors, (dataBuffer.end() - 1)->descriptors,
-                             matches, descriptorType, matcherType, selectorType);
+                             matches, descriptorType, matcherType, selectorType, timeElapsed);
 
             //// EOF STUDENT ASSIGNMENT
 
